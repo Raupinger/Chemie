@@ -1,7 +1,9 @@
 
 extension String: explicit {}
-public func make(input: position) {
+// this one is universal for every branch
+public func make(input: Array<position>) {
     var mat = matrix<String>()
     mat.rows = 5
-    mat.colums
+        //these are only for the main branch 
+    mat.colums = (input.count / 2) - 1
 }
