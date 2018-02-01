@@ -88,12 +88,10 @@ private func base(input: Array<String>, typeMap: Array<String>)-> Array<position
     for i in 1 ... textNumber(text: textLength)-1 {
         output.append(position())
     }
-    output.forEach { objective in output
-        objective.border = ["","H","","H"]
-    }
-    output.last?.bindingSize = 0
-    output.last?.border = ["","H","H","H"]
-    output.first?.border = ["H","H","","H"]
+    
+    output[output.count - 1].bindings[2] = 0
+    output[output.count - 1].border = [.prior,.H,.H,.H]
+    output[0].border = [.H,.H,.next,.H]
     return output
 }
 
@@ -135,14 +133,30 @@ func addBindingSizes(inputMolecuele: Array<position>, input: Array<String>, type
     
     let placesDouble = getPlaces(input: input, typeMap: typeMap, checkFor: "en")
     let placesTriple = getPlaces(input: input, typeMap: typeMap, checkFor: "in")
-    
+        // TODO: GENERAL: remove Redundancy 
+        // TODO: E/Z: add flexibility 
     placesDouble.forEach{ element in placesDouble
-        //the chemical counting starts with 1, the array with 0, thaths why we have to do element - 1
-        outputMolecule[element-1].bindingSize = 2
-        outputMolecule
+        //the chemical counting starts with 1, the array with 0, thats why we have to do element - 1
+        outputMolecule[element-1].bindings = [outputMolecule[element - 1].bindings[0], 1, 2]
+            // lowering the amount of neighbors to 3 
+        outputMolecule[element-1].border = [outputMolecule[element - 1].border[0], .H, outputMolecule[element - 1].border[2] ]
+            // adjusting the binding of a potential next position 
+        do {
+            print(outputMolecule[element])
+            outputMolecule[element].bindings = [2, 1, outputMolecule[element].bindings[3]]
+            // lowering the amount of neighbors to 3 
+            outputMolecule[element].border = [outputMolecule[element].border[0], .H, outputMolecule[element].border[2] ]
+        } 
     }
     placesTriple.forEach{ element in placesTriple
-        outputMolecule[element-1].bindingSize = 3
+        outputMolecule[element-1].bindings = [outputMolecule[element - 1].bindings[0], 3]
+        // lowering the amount of neighbors to 2 
+        outputMolecule[element-1].border = [outputMolecule[element - 1].border[0], outputMolecule[element - 1].border[2] ]
+        do {
+            outputMolecule[element].bindings = [3, outputMolecule[element].bindings[3]]
+            // lowering the amount of neighbors to 2
+            outputMolecule[element].border = [outputMolecule[element].border[0], outputMolecule[element].border[2] ]
+        }
     }
     
     return outputMolecule
@@ -150,6 +164,7 @@ func addBindingSizes(inputMolecuele: Array<position>, input: Array<String>, type
 
 func getExtentions(inputMolecuele: Array<position>, input: Array<String>, typeMap: Array<String>)-> Array<position> {
     //placeholder 
+    // TODO: E/Z: add flexibility 
     var direction = 1
     
     var outputMolecule:Array<position> = inputMolecuele
@@ -184,18 +199,17 @@ func getExtentions(inputMolecuele: Array<position>, input: Array<String>, typeMa
     print(places)
     i = 0
     for element in  places {
-        //compensating for counting methods 
         
-        outputMolecule[element-1].extended = direction
         
         var extention:Array<position> = []
         for ii in 0 ... textNumber(text: sizes[i]) {
             var new = position()
-            new.border = ["","H","","H"]
+            new.border = [.prior,.H,.next,.H]
             extention.append(new)
         }
-        extention.last?.border[3] = "H"
-        outputMolecule[element - 1].extention = extention
+        extention[extention.count-1].border[3] = .H
+        //compensating for counting methods 
+        outputMolecule[element - 1].border[direction] = .extention(extention)
         i = i + 1
     }
     return outputMolecule
@@ -206,3 +220,9 @@ let types = makeTypeMap(origin: firstInput)
 let start = base(input: firstInput, typeMap: types)
 let withBindings = addBindingSizes(inputMolecuele: start, input: firstInput, typeMap: types)
 let withExtentions = getExtentions(inputMolecuele: withBindings, input: firstInput, typeMap: types)
+for e in withExtentions {
+    e.bindings
+    e.border.forEach{ ee in e
+        ee
+    }
+}
