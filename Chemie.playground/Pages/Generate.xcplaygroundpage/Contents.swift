@@ -1,21 +1,6 @@
 //containes only the necessary information ( example: dimeth → meth)
 public let firstInput = ["2","4","meth","yl","hex","2","en"]
-class position {
-    func set(binding: Int, around: Array<String>) {
-        bindingSize = binding
-        border = around
-    }
-    
-    // 0= none; 1= single binding; 2= double binding; 3= tripple
-    var bindingSize = 1
-    // 0= none; 1= first direction ; 2= second direction
-    var extended = 0
-    // molecule extention is a list of positions itself 
-    var extention:Array<position> = []
-    // clockwise 
-    var border:Array<String> = Array(repeating: "", count: 4)
-    
-}
+
 
 func replaceElement(master: Array<String>, target: String, new:String) -> Array<String> {
     var index = 0
