@@ -15,4 +15,4 @@ public struct position {
     // clockwise 
     public var border:Array<String> = Array(repeating: "", count: 4)
     
-}
+} 
