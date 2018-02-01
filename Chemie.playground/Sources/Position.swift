@@ -16,3 +16,11 @@ public struct position {
     public var border:Array<String> = Array(repeating: "", count: 4)
     
 } 
+
+public enum neighbour {
+    case extention(Array<position>)
+    case prior
+    case next
+    case atom(String)
+    case nothing
+}
